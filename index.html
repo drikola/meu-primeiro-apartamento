@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encontre seu Apartamento Ideal</title>
+    <style>
+        /* Estilos Gerais */
+        :root {
+            --primary-color: #2ecc71; /* Verde typical de imóveis */
+            --text-dark: #333;
+            --bg-light: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* Cabeçalho */
+        header {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        header h1 { margin: 0; color: var(--primary-color); }
+        header p { margin: 5px 0 0; color: #666; }
+
+        /* Barra de Busca */
+        .search-container {
+            background: white;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .search-container input, .search-container select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        /* Grid de Imóveis */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Cartão do Imóvel */
+        .property-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .property-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .property-image {
+            height: 200px;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .property-details {
+            padding: 15px;
+        }
+
+        .property-price {
+            color: var(--primary-color);
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .property-title {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .property-info {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Botão de Contato */
+        .btn-contact {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-contact:hover {
+            background-color: #27ae60;
+        }
+
+        /* Rodapé */
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            background: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Imóveis Alpha</h1>
+        <p>Encontre o apartamento dos seus sonhos</p>
+    </header>
+
+    <!-- Área de Filtros -->
+    <div class="search-container">
+        <input type="text" id="searchLocation" placeholder="Bairro ou Cidade..." onkeyup="filterProperties()">
+        <select id="searchPrice" onchange="filterProperties()">
+            <option value="all">Qualquer Preço</option>
+            <option value="low">até R$ 1.000</option>
+            <option value="mid">R$ 1.000 a R$ 2.000</option>
+            <option value="high">Acima de R$ 2.000</option>
+        </select>
+    </div>
+
+    <!-- Onde os imóveis aparecem -->
+    <div class="container" id="propertiesList">
+        <!-- O JavaScript vai inserir os imóveis aqui -->
+    </div>
+
+    <footer>
+        <p>Entre em contato: (11) 99999-9999</p>
+    </footer>
+
+    <script>
+        // ==========================================
+        // CONFIGURAÇÃO DOS SEUS IMÓVEIS
+        // ==========================================
+        
+        // Seu número de WhatsApp (com código do país, ex: 55 para Brasil)
+        const seuNumeroWhatsApp = "5511999999999"; 
+        const seuTelefone = "5511999999999";
+
+        // Lista de Imóveis (Você pode adicionar quantos quiser)
+        const imoveis = [
+            {
+                id: 1,
+                titulo: "Apartamento Centro",
+                local: "Centro, São Paulo",
+                preco: 1500,
+                quartos: 2,
+                area: "60m²",
+                imagem: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 2,
+                titulo: "Cobertura Completa",
+                local: "Moema, São Paulo",
+                preco: 4500,
+                quartos: 3,
+                area: "120m²",
+                imagem: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 3,
+                titulo: "Studio Mobiliado",
+                local: "Vila Madalena, São Paulo",
+                preco: 1800,
+                quartos: 1,
+                area: "35m²",
+                imagem: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+            },
+            {
+                id: 4,
+                titulo: "Flat funcional",
+                para: "Alphaville, Barueri",
+                preco: 2200,
+                quartos: 2,
+                area: "70m²",
+                imagem: "https://images.unsplash.com/photo-1484154218962-a1c00207bf9a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+            }
+        ];
+
+        // ==========================================
+        // LÓGICA DO SITE
+        // ==========================================
+
+        const listaDiv = document.getElementById('propertiesList');
+
+        function renderImoveis(lista) {
+            listaDiv.innerHTML = ""; // Limpa a lista atual
+
+            lista.forEach(imovel => {
+                // Cria o link do WhatsApp com mensagem automática
+                const mensagemWhatsApp = `Olá, estou interessado no imóvel: ${imovel.titulo} no valor de R$ ${imovel.preco}. Podemos conversar?`;
+                const linkWhatsApp = `https://wa.me/${seuNumeroWhatsApp}?text=${encodeURIComponent(mensagemWhatsApp)}`;
+
+                // Cria o HTML do cartão
+                const card = `
+                    <div class="property-card">
+                        <div class="property-image" style="background-image: url('${imovel.imagem}')"></div>
+                        <div class="property-details">
+                            <div class="property-price">R$ ${imovel.preco} / mês</div>
+                            <h3 class="property-title">${imovel.titulo}</h3>
+                            <div class="property-info">
+                                <span>${imovel.local}</span>
+                                <span>${imovel.quartos} Quartos</span>
+                            </div>
+                            <p style="font-size: 0.9em; color: #666;">${imovel.area}</p>
+                            
+                            <!-- Botão Principal -->
+                            <a href="${linkWhatsApp}" target="_blank" class="btn-contact">
+                                Agendar Visita via WhatsApp
+                            </a>
+                            
+                            <!-- Botão Alternativo (Telefone) -->
+                            <div style="text-align: center; margin-top: 10px;">
+                                <small>Ou Ligue: <a href="tel:${seuTelefone}" style="color: #555; text-decoration: none;">${seuTelefone}</a></small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                listaDiv.innerHTML += card;
+            });
+        }
+
+        // Função de Filtrar
+        function filterProperties() {
+            const locationText = document.getElementById('searchLocation').value.toLowerCase();
+            const priceRange = document.getElementById('searchPrice').value;
+
+            const filtered = imoveis.filter(imovel => {
+                const matchLoc = imovel.local.toLowerCase().includes(locationText) || imovel.titulo.toLowerCase().includes(locationText);
+                
+                let matchPrice = true;
+                if (priceRange === 'low') matchPrice = imovel.preco <= 1000;
+                if (priceRange === 'mid') matchPrice = imovel.preco > 1000 && imovel.preco <= 2000;
+                if (priceRange === 'high') matchPrice = imovel.preco > 2000;
+
+                return matchLoc && matchPrice;
+            });
+
+            renderImoveis(filtered);
+        }
+
+        // Inicializa o site
+        renderImoveis(imoveis);
+
+    </script>
+</body>
+</html>
